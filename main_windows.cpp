@@ -313,7 +313,7 @@ int main() {
 
     }
 
-   // Получение аргументов (UTF-16)
+    // Получение аргументов (UTF-16)
     int argcW = 0;
     LPWSTR* argvW = CommandLineToArgvW(GetCommandLineW(), &argcW);
 
@@ -358,4 +358,5 @@ int main() {
     }
 
     return 0;
+
 }
