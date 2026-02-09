@@ -3,8 +3,6 @@
 #include <string>
 #include <vector>
 #include <cstring>
-#include <windows.h>
-#include <shellapi.h>
 
 void stem_ru_en(std::string& w) {
     int n = (int)w.size();
@@ -284,79 +282,51 @@ std::vector<std::string> boolean_search(const std::string& query) {
 }
 
 
-int main() {
-    SetConsoleOutputCP(CP_UTF8);
-
-    std::ifstream input("corpus.tsv", std::ios::binary);
+int main(int argc, char* argv[]) {
+    std::ifstream input("corpus.tsv");
     if (!input.is_open()) {
         std::cerr << "Cannot open corpus.tsv\n";
         return 1;
     }
 
     std::string line;
-
     while (std::getline(input, line)) {
         size_t tab = line.find('\t');
-        if (tab == std::string::npos) {
-            continue;
-        }
+        if (tab == std::string::npos) continue;
 
         std::string doc_id = line.substr(0, tab);
-        std::string text = line.substr(tab + 1);
-
+        std::string text   = line.substr(tab + 1);
 
         std::vector<std::string> tokens;
         tokenize_and_stem(text, tokens);
-
-        for (const auto& tok : tokens) {
+        for (const auto& tok : tokens)
             add_to_index(tok, doc_id);
-        }
-
     }
-
-   // Получение аргументов (UTF-16)
-    int argcW = 0;
-    LPWSTR* argvW = CommandLineToArgvW(GetCommandLineW(), &argcW);
-
-    if (!argvW || argcW < 2) {
-        std::cout << "Usage: main.exe <query>\n";
-        std::cout << "Example: main.exe информация AND поиск\n";
-        if (argvW) LocalFree(argvW);
-        return 0;
-    }
-
-    // Конвертация UTF-16 -> UTF-8
+    std::cout << "Index built. Enter query\n";
     std::string query;
 
-    for (int i = 1; i < argcW; i++) {
-        int len = WideCharToMultiByte(
-            CP_UTF8, 0,
-            argvW[i], -1,
-            nullptr, 0,
-            nullptr, nullptr
-        );
-
-        std::string tmp(len - 1, '\0');
-
-        WideCharToMultiByte(
-            CP_UTF8, 0,
-            argvW[i], -1,
-            tmp.data(), len,
-            nullptr, nullptr
-        );
-
-        if (i > 1) query += " ";
-        query += tmp;
+    if (argc > 1) {
+        for (int i = 1; i < argc; i++) {
+            if (i > 1) query += " ";
+            query += argv[i];
+        }
     }
 
-    LocalFree(argvW);
+    else {
+        std::getline(std::cin, query);
+    }
+
+    if (query.empty()) {
+        std::cout << "Empty query\n";
+        return 0;
+    }
 
     auto res = boolean_search(query);
 
     std::cout << "Found: " << res.size() << " documents\n";
-    for (int i = 0; i < (int)res.size() && i < 7; i++) {
+    for (int i = 0; i < (int)res.size() && i < 7; i++)
         std::cout << " - doc_id: " << res[i] << "\n";
-    }
 
     return 0;
 }
+
