@@ -294,7 +294,7 @@ int main(int argc, char* argv[]) {
         if (tab == std::string::npos) continue;
 
         std::string doc_id = line.substr(0, tab);
-        std::string text   = line.substr(tab + 1);
+        std::string text = line.substr(tab + 1);
 
         std::vector<std::string> tokens;
         tokenize_and_stem(text, tokens);
@@ -328,3 +328,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
