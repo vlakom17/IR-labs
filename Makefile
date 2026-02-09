@@ -13,5 +13,4 @@ $(TOKENIZER): tokenizer.cpp
 	$(CXX) $(CXXFLAGS) tokenizer.cpp -o $(TOKENIZER)
 
 clean:
-	del /Q $(MAIN).exe $(TOKENIZER).exe 2>nul
-
+	rm -f main tokenizer main.exe tokenizer.exe
