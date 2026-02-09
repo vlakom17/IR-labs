@@ -1,3 +1,4 @@
+# python zipf.py
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -34,3 +35,4 @@ plt.grid(True, which="major", linestyle="--", alpha=0.6)
 
 plt.tight_layout()
 plt.show()
+
