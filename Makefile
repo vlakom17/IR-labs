@@ -12,5 +12,10 @@ $(MAIN): main.cpp
 $(TOKENIZER): tokenizer.cpp
 	$(CXX) $(CXXFLAGS) tokenizer.cpp -o $(TOKENIZER)
 
+# Очистка для Windows
 clean:
-	rm -f main tokenizer main.exe tokenizer.exe
+	del /Q $(MAIN).exe $(TOKENIZER).exe 2>nul
+
+# Очистка для Linux:
+# clean:
+# 	rm -f main tokenizer main.exe tokenizer.exe
